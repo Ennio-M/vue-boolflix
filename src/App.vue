@@ -2,10 +2,11 @@
   <div id="app">
     <header>
       <h1>BOOLFLIX</h1>
-      <search-bar @search="searchArray"/>
+      <search-bar @search="getAll"/>
     </header>
     <main>
-      <app-grid :movies="moviesArray"/>
+      <app-grid :items="moviesArray" what="Film"/>
+      <app-grid :items="seriersArray" what="Serie"/>
     </main>
   </div>
 </template>
@@ -25,23 +26,29 @@ export default {
     return {
       apiPath: 'https://api.themoviedb.org/3/search/',
       apiKey: 'b01146b2d3706fbbee082c9767602fd1',
-      moviesArray: []
+      moviesArray: [],
+      seriersArray: [],
     }
   },
   methods: {
     getMovies(queryParams) {
-      axios.get(`${this.apiPath}movie`, queryParams).then((res) => {
-        this.moviesArray = res.data.results;
-      }).catch((error) => {console.log(error)})
+      return axios.get(`${this.apiPath}movie`, queryParams).catch((error) => {console.log(error)})
     },
-    searchArray(txt) {
+    getSeries(queryParams) {
+      return axios.get(`${this.apiPath}tv`, queryParams).catch((error) => {console.log(error)})
+    },
+    getAll(txt) {
       const queryParams = {
         params: {
           api_key: this.apiKey,
           query: txt
         }
       }
-      this.getMovies(queryParams)
+      Promise.all([this.getMovies(queryParams), this.getSeries(queryParams)])
+      .then((results) => {
+        this.moviesArray = results[0].data.results;
+        this.seriersArray = results[1].data.results;
+      })
     }
   }
 }

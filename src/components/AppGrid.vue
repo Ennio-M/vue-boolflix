@@ -1,23 +1,23 @@
 <template>
     <section>
+        <h2>{{items.length != 0 ? what : ''}}</h2>
         <ul>
-        <li v-for="movie in movies" :key="movie.id">
-          id: {{movie.id}} <br>
-          titolo originale: {{movie.original_title}} <br>
-          titolo: {{movie.title}} <br>
-          lingua: {{movie.original_language}} <br>
-          voto: {{movie.vote_average}}
-        </li>
+        <app-card  v-for="item in items" :key="item.id" :card="item"/>
       </ul>
     </section>
 </template>
 
 <script>
+import AppCard from './AppCard.vue'
 
 export default {
     name: 'AppGrid',
+    components: {
+        AppCard
+    },
     props: {
-        movies: Array
+        items: Array,
+        what: String
     },
     data() {
         return {
