@@ -1,12 +1,16 @@
 <template>
   <div id="app">
     <header>
-      <h1>BOOLFLIX</h1>
-      <search-bar @search="getAll"/>
+      <div class="container d-flex justify-content-between align-items-center h-100">
+        <h1 class="m-0 red">BOOLFLIX</h1>
+        <search-bar @search="getAll"/>
+      </div>
     </header>
     <main>
-      <app-grid :items="moviesArray" what="Film"/>
-      <app-grid :items="seriersArray" what="Serie"/>
+      <div class="container">
+        <app-grid :items="moviesArray" :what="'Film'"/>
+        <app-grid :items="seriersArray" :what="'Serie'"/>
+      </div>
     </main>
   </div>
 </template>
@@ -56,4 +60,17 @@ export default {
 
 <style lang="scss">
   @import './styles/general.scss';
+  #app{
+    width: 100%;
+    height: 100vh;
+  }
+  header{
+    height: 70px;
+    background-color: $black;
+  }
+  main{
+    height: calc(100vh - 70px);
+    background-color: $gray;
+    overflow: auto;
+  }
 </style>

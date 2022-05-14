@@ -1,21 +1,35 @@
 <template>
-    <li>
-        <div v-if="card.poster_path != null">
-            <img :src="imgUrl + imgWidth + card.poster_path" :alt="card.original_title + ' poster'">
+    <div class="w-100 h-100 mycard overflow-hidden">
+        <div v-if="card.poster_path != null" class="w-100 h-100">
+            <img :src="imgUrl + imgWidth + card.poster_path" class="w-100 h-100">
         </div>
-        <div v-else>
-            <h2>{{card.original_title ? card.original_title : card.original_name}}</h2>
+        <div class="w-100 h-100" v-else>
+            <img :src="require('../assets/imgs/fallback.jpg')" alt="Generic poster" class="w-100 h-100">
         </div>
-         <br>
-        titolo originale: {{card.original_title ? card.original_title : card.original_name}} <br>
-        titolo: {{card.title ? card.title : card.name}} <br>
-        lingua: <img :src="require(`../assets/flags/flagImgs/${flagCode}.png`)" :alt="flagCode + ' flag'"> <br>
-        voto: <span v-if="card.vote_count > 0">
-            <i v-for="(n, i) in 5" :key="i" :class="n < transform(card.vote_average) ? 'fa-solid gold' : 'fa-regular'" class="fa-star"></i>
-        </span>
-        <span v-else>0 voti</span>
-        
-    </li>
+        <div class="description">
+            <div>
+                <h4 class="d-inline-block">Titolo:&nbsp;</h4> <span class="film_data">{{card.title ? card.title : card.name}}</span>
+            </div>
+            <div v-if="card.title != card.original_title || card.name != card.original_name">
+                <h4 class="d-inline-block">Titolo originale:&nbsp;</h4> <span class="film_data">{{card.original_title ? card.original_title : card.original_name}}</span>
+            </div>
+            <div>
+                <h4 class="d-inline-block">Lingua:&nbsp;</h4>
+                <img :src="require(`../assets/flags/flagImgs/${flagCode}.png`)" :alt="flagCode + ' flag'">
+            </div>
+            <div>
+                <h4 class="d-inline-block">Voto:&nbsp;</h4> <span v-if="card.vote_count > 0">
+                    <i v-for="(n, i) in 5" :key="i" :class="n < transform(card.vote_average) ? 'fa-solid gold' : 'fa-regular'" class="fa-star"></i>
+                </span>
+                <span class="film_data" v-else>0 voti</span>
+            </div>
+            <div>
+                <h4 class="d-inline-block">Trama:</h4> <br>
+                <span class="film_data" v-if="card.overview">{{card.overview.slice(0, 200) + '...'}}</span>
+                <span class="film_data" v-else>Trama non presente</span>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -53,5 +67,29 @@ export default {
 <style lang="scss" scoped>
     .gold{
         color: gold;
+    }
+    .mycard{
+        position: relative;
+        &:hover{
+            border: 1px solid white;
+            cursor: pointer;
+        }
+        &:hover .description{
+            display: block;
+        }
+    }
+    .description{
+        position: absolute;
+        z-index: 1000;
+        color: white;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        display: none;
+        background-color: rgba($color: #000000, $alpha: 0.8);
+        padding: 30px 15px;
+        .film_data{
+            font-size: .8em;
+        }
     }
 </style>
